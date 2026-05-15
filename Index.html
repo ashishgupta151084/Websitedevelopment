@@ -1436,12 +1436,18 @@ var GAS_URL = 'https://script.google.com/macros/s/AKfycbzixFcJbx1ZPl4OAiVJUljcU-
 
 function sendToGAS(payload) {
   try {
-    fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
+    // Use URL params via GET — works cross-origin with GAS
+    var params = 'action=lead';
+    var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','message'];
+    keys.forEach(function(k){
+      params += '&' + k + '=' + encodeURIComponent(payload[k]||'');
     });
+    var img = new Image();
+    img.src = GAS_URL + '?' + params;
+    // Also try FormData POST
+    var fd = new FormData();
+    fd.append('payload', JSON.stringify(payload));
+    fetch(GAS_URL, { method:'POST', mode:'no-cors', body: fd });
   } catch(e) { console.warn('GAS send failed:', e); }
 }
 
