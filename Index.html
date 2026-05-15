@@ -255,6 +255,8 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
   .pcard.feat::before{font-size:8px;padding:4px 40px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("gG-SDHQE3zfwzZhYk");</script>
 </head>
 <body>
 
@@ -1435,20 +1437,50 @@ function buildWALink(name, phone, plan, refId, type) {
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbzAdMf3irvKzB1gl3DgnmZj8u4wnGJgrG7S-xVgLHcruqzMj0M8APXZe5nolYg8pf2c6w/exec';
 
 function sendToGAS(payload) {
+  // Send email via EmailJS
   try {
-    // Use URL params via GET — works cross-origin with GAS
+    emailjs.send('service_5hz9zo4', 'template_xqn94eh', {
+      ref_id:      payload.refId      || '',
+      form_type:   payload.formType   || '',
+      name:        payload.name       || '',
+      phone:        payload.phone      || '',
+      email:       payload.email      || '',
+      business:    payload.business   || '',
+      plan:        payload.plan       || '',
+      ca_question: payload.caQuestion || '',
+      message:     payload.message    || '',
+      time:        new Date().toLocaleString('en-IN', {timeZone:'Asia/Kolkata'})
+    }).then(function(){ console.log('Email sent!'); },
+            function(err){ console.warn('EmailJS error:', err); });
+  } catch(e) { console.warn('EmailJS failed:', e); }
+  // Also try GAS as backup
+  try {
     var params = 'action=lead';
     var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','message'];
-    keys.forEach(function(k){
-      params += '&' + k + '=' + encodeURIComponent(payload[k]||'');
-    });
+    keys.forEach(function(k){ params += '&' + k + '=' + encodeURIComponent(payload[k]||''); });
     var img = new Image();
     img.src = GAS_URL + '?' + params;
-    // Also try FormData POST
-    var fd = new FormData();
-    fd.append('payload', JSON.stringify(payload));
-    fetch(GAS_URL, { method:'POST', mode:'no-cors', body: fd });
-  } catch(e) { console.warn('GAS send failed:', e); }
+  } catch(e2) {}
+}
+function sendToGAS_UNUSED(payload) {
+  try {
+    // Send to Formspree — auto-emails owner on every submission
+    var formData = new FormData();
+    formData.append('_subject', '🔔 New Lead — ' + (payload.formType||'Website') + ' | ' + (payload.plan||''));
+    formData.append('_replyto', payload.email||'');
+    Object.keys(payload).forEach(function(k){ formData.append(k, payload[k]||''); });
+    fetch('https://formspree.io/f/ashishgupta151084@gmail.com', {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+    // Also try GAS as backup
+    var params = 'action=lead';
+    var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','message'];
+    keys.forEach(function(k){ params += '&' + k + '=' + encodeURIComponent(payload[k]||''); });
+    var img = new Image();
+    img.src = GAS_URL + '?' + params;
+  } catch(e) { console.warn('Send failed:', e); }
 }
 
 function notifyOwner(name, phone, plan, refId, type) {
