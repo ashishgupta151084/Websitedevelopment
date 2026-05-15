@@ -33,7 +33,7 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+body{background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
 
 /* UTILITY */
 .container{width:92%;max-width:1100px;margin:auto}
@@ -46,7 +46,7 @@ h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,46px);font-we
 .tc .divider{margin-left:auto;margin-right:auto}
 
 /* BUTTONS */
-.btn{display:inline-block;background:transparent;color:var(--blue);border:1.5px solid var(--blue);padding:13px 32px;text-decoration:none;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:3px;transition:all .3s;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn{display:inline-block;background:transparent;color:var(--blue);border:1.5px solid var(--blue);padding:13px 32px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:3px;transition:all .3s;cursor:pointer;font-weight:500;white-space:nowrap}
 .btn:hover{background:#c9a84c;color:#0e0e0e;box-shadow:0 6px 24px rgba(201,168,76,.3)}
 .btn-solid{background:#c9a84c;color:#0e0e0e}
 .btn-solid:hover{background:#a8883a;border-color:#a8883a}
@@ -148,7 +148,7 @@ h1 em{color:#c9a84c;font-style:italic}
 /* FORMS */
 .form-box{background:#1a1200;border-radius:10px;padding:48px;box-shadow:0 8px 40px rgba(0,0,0,.6);border:1px solid rgba(201,168,76,.3)}
 .ftabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:32px;overflow-x:auto}
-.ftab{padding:14px 28px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;cursor:pointer;color:#c4b080;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .3s;font-family:'Jost',sans-serif;white-space:nowrap}
+.ftab{padding:14px 28px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;cursor:pointer;color:#c4b080;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .3s;white-space:nowrap}
 .ftab.active{color:#c9a84c;border-bottom-color:#c9a84c}
 .fpanel{display:none}
 .fpanel.active{display:block}
@@ -158,7 +158,7 @@ h1 em{color:#c9a84c;font-style:italic}
 .fg{margin-bottom:20px}
 .fg label{display:block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#e0b84a;margin-bottom:8px;font-weight:700}
 .fg label .req{color:var(--error);margin-left:2px}
-.fg input,.fg select,.fg textarea{width:100%;background:#261e08;border:1.5px solid rgba(201,168,76,.6);color:#ffffff;padding:12px 16px;font-family:'Jost',sans-serif;font-size:14px;border-radius:4px;outline:none;transition:all .3s;-webkit-appearance:none;appearance:none}
+.fg input,.fg select,.fg textarea{width:100%;background:#261e08;border:1.5px solid rgba(201,168,76,.6);color:#ffffff;padding:12px 16px;font-size:14px;border-radius:4px;outline:none;transition:all .3s;-webkit-appearance:none;appearance:none}
 .fg input::placeholder,.fg textarea::placeholder{color:#8a7040}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#c9a84c;box-shadow:0 0 0 3px rgba(201,168,76,.2);background:#2e2408}
 .fg input.err,.fg select.err,.fg textarea.err{border-color:var(--error)!important;box-shadow:0 0 0 3px rgba(220,38,38,.08)!important}
@@ -1146,7 +1146,7 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
         Click below — amount is pre-filled in USD. You'll be taken to PayPal to complete payment securely.
       </p>
       <a id="modal-paypal-btn" href="#" target="_blank"
-        style="display:block;width:100%;background:#0070ba;color:#fff;border:none;border-radius:4px;padding:16px;font-family:'Jost',sans-serif;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:10px;letter-spacing:.5px">
+        style="display:block;width:100%;background:#0070ba;color:#fff;border:none;border-radius:4px;padding:16px;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:10px;letter-spacing:.5px">
         💳 Pay with PayPal
       </a>
       <p style="font-size:11px;color:var(--muted);line-height:1.65">
@@ -1162,7 +1162,7 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
     <div id="modal-ca-offer" style="display:none;margin-top:16px;background:linear-gradient(135deg,#1a1508,#2a2010);border:1.5px solid rgba(201,168,76,.5);border-radius:8px;padding:16px;text-align:center">
       <p style="font-size:11px;color:#c9a84c;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">🎁 You Qualify for a Free CA Consultancy!</p>
       <p style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;line-height:1.6">After confirming payment, book your free 15-min Chartered Accountant consultation</p>
-      <button onclick="openCAFromPayment()" style="background:#c9a84c;color:#0e0e0e;border:none;padding:10px 24px;border-radius:5px;font-family:'Jost',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase">📅 Book Free CA Consultancy →</button>
+      <button onclick="openCAFromPayment()" style="background:#c9a84c;color:#0e0e0e;border:none;padding:10px 24px;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase">📅 Book Free CA Consultancy →</button>
     </div>
   </div>
 </div>
@@ -1186,18 +1186,18 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
 
       <div style="margin-bottom:16px">
         <label style="display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;font-weight:600">Question 1 <span style="color:#c0392b">*</span></label>
-        <textarea id="ca-q1" placeholder="e.g. Should I register my business as a sole proprietor or private limited company?" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;border-radius:6px;outline:none;resize:vertical;min-height:80px;transition:border-color .3s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(201,168,76,.45)'"></textarea>
+        <textarea id="ca-q1" placeholder="e.g. Should I register my business as a sole proprietor or private limited company?" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-size:13px;border-radius:6px;outline:none;resize:vertical;min-height:80px;transition:border-color .3s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(201,168,76,.45)'"></textarea>
         <p class="errmsg" id="ca-q1-e">Please enter your first question.</p>
       </div>
       <div style="margin-bottom:16px">
         <label style="display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;font-weight:600">Question 2 <span style="color:#8a8070;font-weight:400">(optional)</span></label>
-        <textarea id="ca-q2" placeholder="e.g. What are the GST implications for my business?" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;border-radius:6px;outline:none;resize:vertical;min-height:80px;transition:border-color .3s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(201,168,76,.45)'"></textarea>
+        <textarea id="ca-q2" placeholder="e.g. What are the GST implications for my business?" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-size:13px;border-radius:6px;outline:none;resize:vertical;min-height:80px;transition:border-color .3s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(201,168,76,.45)'"></textarea>
       </div>
       <div style="margin-bottom:24px">
         <label style="display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;font-weight:600">Question 3 <span style="color:#8a8070;font-weight:400">(optional)</span></label>
-        <textarea id="ca-q3" placeholder="e.g. How should I manage business expenses and tax deductions?" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;border-radius:6px;outline:none;resize:vertical;min-height:80px;transition:border-color .3s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(201,168,76,.45)'"></textarea>
+        <textarea id="ca-q3" placeholder="e.g. How should I manage business expenses and tax deductions?" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-size:13px;border-radius:6px;outline:none;resize:vertical;min-height:80px;transition:border-color .3s" onfocus="this.style.borderColor='#c9a84c'" onblur="this.style.borderColor='rgba(201,168,76,.45)'"></textarea>
       </div>
-      <button onclick="submitCAQuestions()" style="width:100%;padding:15px;background:#c9a84c;color:#0e0e0e;border:none;border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:background .3s" onmouseover="this.style.background='#a8883a'" onmouseout="this.style.background='#c9a84c'">
+      <button onclick="submitCAQuestions()" style="width:100%;padding:15px;background:#c9a84c;color:#0e0e0e;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:background .3s" onmouseover="this.style.background='#a8883a'" onmouseout="this.style.background='#c9a84c'">
         Submit Questions & Book Session →
       </button>
     </div>
@@ -1217,12 +1217,12 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
 
       <div style="margin-bottom:20px">
         <label style="display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;font-weight:600">Preferred Date <span style="color:#c0392b">*</span></label>
-        <input type="date" id="ca-date" min="" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-family:'Jost',sans-serif;font-size:14px;border-radius:6px;outline:none;transition:border-color .3s">
+        <input type="date" id="ca-date" min="" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-size:14px;border-radius:6px;outline:none;transition:border-color .3s">
         <p class="errmsg" id="ca-date-e">Please select a date.</p>
       </div>
       <div style="margin-bottom:24px">
         <label style="display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;font-weight:600">Preferred Time Slot <span style="color:#c0392b">*</span></label>
-        <select id="ca-time" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-family:'Jost',sans-serif;font-size:14px;border-radius:6px;outline:none;-webkit-appearance:none;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px">
+        <select id="ca-time" style="width:100%;background:#1e1a0e;border:1.5px solid rgba(201,168,76,.45);color:#f5edd8;padding:12px 14px;font-size:14px;border-radius:6px;outline:none;-webkit-appearance:none;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px">
           <option value="">-- Select a time slot --</option>
           <option>10:00 AM – 10:15 AM</option>
           <option>10:30 AM – 10:45 AM</option>
@@ -1239,7 +1239,7 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
         </select>
         <p class="errmsg" id="ca-time-e">Please select a time slot.</p>
       </div>
-      <button onclick="confirmCABooking()" style="width:100%;padding:15px;background:#c9a84c;color:#0e0e0e;border:none;border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:background .3s" onmouseover="this.style.background='#a8883a'" onmouseout="this.style.background='#c9a84c'">
+      <button onclick="confirmCABooking()" style="width:100%;padding:15px;background:#c9a84c;color:#0e0e0e;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:background .3s" onmouseover="this.style.background='#a8883a'" onmouseout="this.style.background='#c9a84c'">
         Confirm Booking →
       </button>
     </div>
@@ -1252,7 +1252,7 @@ footer{background:#0a0a0a;color:#fff;padding:60px 0 28px}
         <p style="font-size:13px;color:#d4c9a8;line-height:2" id="ca-booking-details"></p>
       </div>
       <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Our team will confirm your slot via WhatsApp within 2 hours. Please keep an eye on <strong style="color:#c9a84c" id="ca-confirm-phone"></strong></p>
-      <a id="ca-wa-confirm" href="#" target="_blank" style="display:inline-block;background:#25d366;color:#fff;padding:12px 28px;border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;font-weight:700;text-decoration:none">💬 WhatsApp Confirmation</a>
+      <a id="ca-wa-confirm" href="#" target="_blank" style="display:inline-block;background:#25d366;color:#fff;padding:12px 28px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none">💬 WhatsApp Confirmation</a>
     </div>
   </div>
 </div>
@@ -1858,7 +1858,7 @@ document.getElementById('startProjectLink').addEventListener('click',function(e)
 function getPageLimit(formType) {
   var planId = formType === 'demo' ? 'dw' : 'iplan';
   var plan = val(planId);
-  if(!plan) return 1; // default to 1 if no plan selected
+  if(!plan) return 99; // no plan selected — allow any clicks, validate on submit
   if(plan.indexOf('Single') > -1)   return 1;
   if(plan.indexOf('5 Page') > -1)   return 5;
   if(plan.indexOf('10 Page') > -1)  return 10;
@@ -2028,6 +2028,21 @@ document.getElementById('demoForm').addEventListener('submit', function(e){
       markField('db',       'db-e',       notEmpty(val('db'))),
       markField('di',       'di-e',       notEmpty(val('di'))),
       markField('dw',       'dw-e',       notEmpty(val('dw'))),
+      (function(){
+        var limit = getPageLimit('demo');
+        var grp = document.getElementById('demo-pages-grp');
+        var selected = grp ? grp.querySelectorAll('.on').length : 0;
+        var hintEl = document.getElementById('demo-page-hint');
+        if(selected === 0){
+          if(hintEl){ hintEl.style.color='#ef4444'; hintEl.textContent='Please select at least 1 page'; }
+          return false;
+        }
+        if(limit < 99 && selected > limit){
+          if(hintEl){ hintEl.style.color='#ef4444'; hintEl.textContent='Too many pages for your plan (max '+limit+')'; }
+          return false;
+        }
+        return true;
+      })(),
       markField('dbmodel',  'dbmodel-e',  notEmpty(val('dbmodel'))),
       markField('dabout',   'dabout-e',   notEmpty(val('dabout'))),
       markField('dservices','dservices-e',notEmpty(val('dservices')))
@@ -2066,7 +2081,7 @@ document.getElementById('demoForm').addEventListener('submit', function(e){
           : 'We will start building your free demo and contact you on <strong>' + custPhone + '</strong> within <strong>24 hours</strong>.') +
         ' No payment needed at this stage.</p>' +
         '<p style="margin-top:8px;font-size:12px;color:#8a8070">📌 Your Ref ID: <strong>' + refId + '</strong></p>' +
-        '<a href="' + buildWALink(custName, custPhone, custPlan, refId, 'demo') + '" target="_blank" style="display:inline-block;margin-top:14px;background:#25d366;color:#fff;padding:10px 22px;border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;text-decoration:none">💬 Send Confirmation on WhatsApp</a>';
+        '<a href="' + buildWALink(custName, custPhone, custPlan, refId, 'demo') + '" target="_blank" style="display:inline-block;margin-top:14px;background:#25d366;color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none">💬 Send Confirmation on WhatsApp</a>';
       okBox.classList.add('show');
       okBox.scrollIntoView({behavior:'smooth', block:'center'});
 
