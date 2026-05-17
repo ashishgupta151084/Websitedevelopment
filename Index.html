@@ -1456,7 +1456,7 @@ function sendToGAS(payload) {
   // Also try GAS as backup
   try {
     var params = 'action=lead';
-    var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','message'];
+    var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','industry','website_type','timeline','biz_model','biz_about','services','target','existing_site','colors','source','whatsapp','address','biz_desc','audience','usp','pages','references','logo','content','domain','domain_detail','deadline','budget','message'];
     keys.forEach(function(k){ params += '&' + k + '=' + encodeURIComponent(payload[k]||''); });
     var img = new Image();
     img.src = GAS_URL + '?' + params;
@@ -1476,7 +1476,7 @@ function sendToGAS_UNUSED(payload) {
     });
     // Also try GAS as backup
     var params = 'action=lead';
-    var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','message'];
+    var keys = ['refId','formType','name','phone','email','business','plan','caQuestion','industry','website_type','timeline','biz_model','biz_about','services','target','existing_site','colors','source','whatsapp','address','biz_desc','audience','usp','pages','references','logo','content','domain','domain_detail','deadline','budget','message'];
     keys.forEach(function(k){ params += '&' + k + '=' + encodeURIComponent(payload[k]||''); });
     var img = new Image();
     img.src = GAS_URL + '?' + params;
@@ -2128,8 +2128,18 @@ document.getElementById('demoForm').addEventListener('submit', function(e){
       sendToGAS({
         refId: refId, formType: 'Demo Request',
         name: custName, phone: custPhone,
-        email: val('demail')||'', business: val('dbiz')||'',
-        plan: custPlan, caQuestion: val('dca')||''
+        email: val('de')||'', business: val('db')||'',
+        plan: custPlan, caQuestion: val('dc')||'',
+        industry:     val('di')||'',
+        website_type: val('dw')||'',
+        timeline:     val('dt')||'',
+        biz_model:    val('dbmodel')||'',
+        biz_about:    val('dabout')||'',
+        services:     val('dservices')||'',
+        target:       val('dtarget')||'',
+        existing_site:val('dexist')||'',
+        colors:       val('dcolors')||'',
+        source:       val('ds')||''
       });
       notifyOwner(custName, custPhone, custPlan, refId, 'demo');
 
@@ -2204,9 +2214,25 @@ document.getElementById('intakeForm').addEventListener('submit', function(e){
       sendToGAS({
         refId: refId, formType: 'Website Brief',
         name: custName, phone: custPhone,
-        email: val('iemail')||'', business: val('ibiz')||'',
+        email: val('ie')||'', business: val('ibn')||'',
         plan: custPlan, caQuestion: val('ica1')||'',
-        message: val('inotes')||''
+        whatsapp:     val('iwa')||'',
+        industry:     val('iind')||'',
+        address:      val('iadr')||'',
+        existing_site:val('iexist')||'',
+        biz_desc:     val('ibdesc')||'',
+        audience:     val('iaud')||'',
+        usp:          val('iusp')||'',
+        pages:        val('ipages')||'',
+        colors:       val('icolors')||'',
+        references:   val('irefs')||'',
+        logo:         val('ilogo')||'',
+        content:      val('icontent')||'',
+        domain:       val('idomain')||'',
+        domain_detail:val('idomdet')||'',
+        deadline:     val('ideadline')||'',
+        budget:       val('ibudget')||'',
+        message:      val('inotes')||''
       });
       notifyOwner(custName, custPhone, custPlan, refId, 'intake');
 
