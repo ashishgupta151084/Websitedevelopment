@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opulence IT — Admin Panel</title>
+<style>
+:root{
+  --gold:#c9a84c;--goldl:#e8c970;--goldd:#a8883a;
+  --bg:#0a0800;--bg2:#130f02;--bg3:#1a1508;--bg4:#241c08;
+  --cream:#f5edd8;--muted:#a89060;--white:#fff;
+  --green:#22c55e;--red:#ef4444;--blue:#3b82f6;--orange:#f97316;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
+.login-box{background:var(--bg3);border:1.5px solid rgba(201,168,76,.3);border-radius:14px;padding:40px;width:360px;text-align:center}
+.login-logo{font-family:serif;font-size:22px;margin-bottom:6px}
+.login-logo span{color:var(--gold)}
+.login-box h2{font-size:18px;color:var(--cream);margin-bottom:24px;font-weight:400}
+.login-input{width:100%;background:#261e08;border:1.5px solid rgba(201,168,76,.4);color:var(--cream);padding:11px 14px;border-radius:7px;font-size:14px;margin-bottom:12px;outline:none}
+.login-input:focus{border-color:var(--gold)}
+.login-btn{width:100%;padding:12px;background:var(--gold);color:#0a0800;border:none;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
+.login-btn:hover{background:var(--goldd)}
+.login-err{color:var(--red);font-size:12px;margin-top:8px;display:none}
+
+/* LAYOUT */
+#app{display:none}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--bg2);border-right:1px solid rgba(201,168,76,.15);padding:20px 0;z-index:100}
+.s-logo{padding:0 20px 20px;border-bottom:1px solid rgba(201,168,76,.15);margin-bottom:16px}
+.s-logo h1{font-family:serif;font-size:18px;font-weight:300}<br>.s-logo h1 span{color:var(--gold)}
+.s-logo p{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:2px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .2s;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(201,168,76,.06);color:var(--cream)}
+.nav-item.active{background:rgba(201,168,76,.1);color:var(--gold);border-left-color:var(--gold)}
+.nav-item .ni{font-size:16px;width:20px}
+.main{margin-left:220px;padding:28px;min-height:100vh}
+.page{display:none}
+.page.active{display:block}
+
+/* HEADER */
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.page-header h2{font-family:serif;font-size:26px;font-weight:300;color:var(--cream)}
+.page-header h2 span{color:var(--gold)}
+.btn{padding:9px 18px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;letter-spacing:.5px}
+.btn-gold{background:var(--gold);color:#0a0800}
+.btn-gold:hover{background:var(--goldd)}
+.btn-outline{background:transparent;border:1px solid rgba(201,168,76,.4);color:var(--gold)}
+.btn-outline:hover{background:rgba(201,168,76,.1)}
+.btn-red{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.btn-green{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--bg3);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:20px}
+.stat-card .sv{font-family:serif;font-size:36px;font-weight:300;color:var(--gold);line-height:1}
+.stat-card .sl{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.5px;text-transform:uppercase}
+.stat-card .sc{font-size:11px;color:var(--green);margin-top:4px}
+
+/* TABLE */
+.table-wrap{background:var(--bg3);border:1px solid rgba(201,168,76,.2);border-radius:10px;overflow:hidden}
+.table-toolbar{padding:16px 20px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(201,168,76,.15);flex-wrap:wrap}
+.search-input{flex:1;min-width:200px;background:#1e1a0e;border:1px solid rgba(201,168,76,.3);color:var(--cream);padding:8px 12px;border-radius:6px;font-size:13px;outline:none}
+.search-input:focus{border-color:var(--gold)}
+.filter-select{background:#1e1a0e;border:1px solid rgba(201,168,76,.3);color:var(--cream);padding:8px 12px;border-radius:6px;font-size:12px;outline:none;cursor:pointer}
+table{width:100%;border-collapse:collapse}
+thead th{padding:12px 16px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:#1a1200;border-bottom:1px solid rgba(201,168,76,.2);white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(201,168,76,.08);transition:background .15s}
+tbody tr:hover{background:rgba(201,168,76,.04)}
+tbody td{padding:12px 16px;font-size:13px;color:var(--cream);vertical-align:middle}
+tbody td.muted{color:var(--muted);font-size:12px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.badge-new{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:var(--blue)}
+.badge-contacted{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);color:var(--orange)}
+.badge-converted{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.badge-lost{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+
+/* PAGINATION */
+.pagination{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(201,168,76,.1);font-size:12px;color:var(--muted)}
+.pg-btns{display:flex;gap:6px}
+.pg-btn{padding:5px 12px;border-radius:5px;font-size:12px;cursor:pointer;background:var(--bg4);border:1px solid rgba(201,168,76,.2);color:var(--cream)}
+.pg-btn:hover,.pg-btn.active{background:rgba(201,168,76,.15);color:var(--gold);border-color:rgba(201,168,76,.4)}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg3);border:1.5px solid rgba(201,168,76,.3);border-radius:12px;padding:28px;max-width:540px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal h3{font-family:serif;font-size:22px;font-weight:300;color:var(--cream);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(201,168,76,.15)}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);color:var(--gold);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.detail-row{display:flex;padding:10px 0;border-bottom:1px solid rgba(201,168,76,.08)}
+.detail-row:last-child{border:none}
+.detail-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;width:120px;flex-shrink:0;padding-top:1px}
+.detail-value{font-size:13px;color:var(--cream);flex:1}
+.status-select{background:#1e1a0e;border:1px solid rgba(201,168,76,.3);color:var(--cream);padding:8px 12px;border-radius:6px;font-size:13px;outline:none;width:100%;margin-top:12px}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.chart-card{background:var(--bg3);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:20px}
+.chart-card h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-label{font-size:12px;color:var(--muted);width:100px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;background:rgba(201,168,76,.08);border-radius:4px;height:24px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldl));border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:700;color:#0a0800;min-width:30px;transition:width .6s ease}
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut-legend{flex:1}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* SETTINGS */
+.settings-section{background:var(--bg3);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:24px;margin-bottom:20px}
+.settings-section h3{font-size:14px;color:var(--gold);font-weight:600;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,.15);text-transform:uppercase;letter-spacing:1px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(201,168,76,.06)}
+.setting-row:last-child{border:none}
+.setting-info h4{font-size:13px;color:var(--cream);font-weight:500}
+.setting-info p{font-size:11px;color:var(--muted);margin-top:2px}
+.setting-input{background:#1e1a0e;border:1px solid rgba(201,168,76,.3);color:var(--cream);padding:8px 12px;border-radius:6px;font-size:13px;outline:none;width:260px}
+.setting-input:focus{border-color:var(--gold)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg4);border:1px solid rgba(201,168,76,.3);color:var(--cream);padding:12px 18px;border-radius:8px;font-size:13px;z-index:9999;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-left:3px solid var(--green)}
+.toast.bad{border-left:3px solid var(--red)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty p{font-size:13px}
+
+/* CONFIG NOTICE */
+.config-notice{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--goldl);line-height:1.6}
+.config-notice strong{color:var(--gold)}
+
+@media(max-width:900px){
+  .sidebar{width:60px}
+  .s-logo,.nav-item span{display:none}
+  .nav-item{justify-content:center;padding:14px}
+  .nav-item .ni{width:auto}
+  .main{margin-left:60px;padding:16px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .charts-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span>OPULENCE</span> IT SOLUTIONS</div>
+    <h2>Admin Panel</h2>
+    <input class="login-input" type="password" id="login-pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <p class="login-err" id="login-err">Incorrect password. Try again.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="s-logo">
+      <h1><span>OPULENCE</span><br>IT SOLUTIONS</h1>
+      <p>ADMIN PANEL</p>
+    </div>
+    <div class="nav-item active" onclick="showPage('dashboard')"><span class="ni">📊</span><span>Dashboard</span></div>
+    <div class="nav-item" onclick="showPage('leads')"><span class="ni">👥</span><span>All Leads</span></div>
+    <div class="nav-item" onclick="showPage('demo-leads')"><span class="ni">🎯</span><span>Demo Requests</span></div>
+    <div class="nav-item" onclick="showPage('projects')"><span class="ni">🌐</span><span>Projects</span></div>
+    <div class="nav-item" onclick="showPage('reports')"><span class="ni">📈</span><span>Reports</span></div>
+    <div class="nav-item" onclick="showPage('settings')"><span class="ni">⚙️</span><span>Settings</span></div>
+    <div class="nav-item" onclick="doLogout()" style="margin-top:auto;position:absolute;bottom:20px;width:100%"><span class="ni">🚪</span><span>Logout</span></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h2>Good morning, <span>Ashish! 👋</span></h2>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-outline" onclick="loadLeads()">↻ Refresh</button>
+          <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+      </div>
+
+      <div class="config-notice" id="config-notice">
+        <strong>⚙️ Setup Required:</strong> Go to <strong>Settings</strong> and paste your Google Apps Script URL to start receiving leads automatically.
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="sv" id="stat-total">0</div>
+          <div class="sl">Total Leads</div>
+          <div class="sc" id="stat-today">0 today</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv" id="stat-new">0</div>
+          <div class="sl">New Leads</div>
+          <div class="sc">Awaiting contact</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv" id="stat-converted">0</div>
+          <div class="sl">Converted</div>
+          <div class="sc" id="stat-revenue">₹0 revenue</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv" id="stat-rate">0%</div>
+          <div class="sl">Conversion Rate</div>
+          <div class="sc">All time</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Leads by Plan</h3>
+          <div class="bar-chart" id="plan-chart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Leads by Status</h3>
+          <div class="bar-chart" id="status-chart"></div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(201,168,76,.15)">
+          <h3 style="font-size:14px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:1px">Recent Leads</h3>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Name</th><th>Phone</th><th>Plan</th><th>Status</th><th>Action</th>
+          </tr></thead>
+          <tbody id="recent-leads-tbody">
+            <tr><td colspan="6"><div class="empty"><div class="empty-icon">📭</div><p>No leads yet. Configure your Google Sheets URL in Settings to start collecting leads.</p></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ALL LEADS -->
+    <div class="page" id="page-leads">
+      <div class="page-header">
+        <h2>All <span>Leads</span></h2>
+        <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="search-input" placeholder="🔍 Search by name, phone, email..." oninput="filterLeads(this.value)">
+          <select class="filter-select" onchange="filterByStatus(this.value)">
+            <option value="">All Status</option>
+            <option value="New">New</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Converted">Converted</option>
+            <option value="Lost">Lost</option>
+          </select>
+          <select class="filter-select" onchange="filterByPlan(this.value)">
+            <option value="">All Plans</option>
+            <option value="Single">Single Page</option>
+            <option value="Business">Business 5 Pages</option>
+            <option value="Professional">Professional 10 Pages</option>
+            <option value="Redesign">Redesign</option>
+          </select>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Ref ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Plan</th><th>Status</th><th>Action</th>
+          </tr></thead>
+          <tbody id="all-leads-tbody"></tbody>
+        </table>
+        <div class="pagination">
+          <span id="pg-info">Showing 0 of 0 leads</span>
+          <div class="pg-btns">
+            <button class="pg-btn" onclick="changePage(-1)" id="pg-prev">← Prev</button>
+            <button class="pg-btn" onclick="changePage(1)" id="pg-next">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO LEADS -->
+    <div class="page" id="page-demo-leads">
+      <div class="page-header"><h2>Demo <span>Requests</span></h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Name</th><th>Phone</th><th>Business</th><th>Plan</th><th>Status</th><th>Action</th>
+          </tr></thead>
+          <tbody id="demo-leads-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="page" id="page-projects">
+      <div class="page-header">
+        <h2>Active <span>Projects</span></h2>
+        <button class="btn btn-gold" onclick="showAddProject()">+ Add Project</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Client</th><th>Phone</th><th>Plan</th><th>Start Date</th><th>Demo URL</th><th>Payment</th><th>Status</th><th>Action</th>
+          </tr></thead>
+          <tbody id="projects-tbody">
+            <tr><td colspan="8"><div class="empty"><div class="empty-icon">🏗️</div><p>No active projects. Projects are added manually.</p></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="page" id="page-reports">
+      <div class="page-header"><h2>Revenue <span>Reports</span></h2></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="sv" id="rpt-total-rev">₹0</div>
+          <div class="sl">Total Revenue</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv" id="rpt-this-month">₹0</div>
+          <div class="sl">This Month</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv" id="rpt-projects">0</div>
+          <div class="sl">Total Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv" id="rpt-avg">₹0</div>
+          <div class="sl">Avg Project Value</div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Revenue by Plan Type</h3>
+        <div class="bar-chart" id="revenue-chart"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings">
+      <div class="page-header"><h2>Admin <span>Settings</span></h2></div>
+
+      <div class="settings-section">
+        <h3>📡 Google Sheets Integration</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Google Apps Script URL</h4>
+            <p>Paste the Web App URL after deploying your Apps Script</p>
+          </div>
+          <input class="setting-input" id="gs-url" placeholder="https://script.google.com/macros/s/..." oninput="saveSetting('gsUrl',this.value)">
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Google Sheet URL</h4>
+            <p>Direct link to your Google Sheet to view leads</p>
+          </div>
+          <input class="setting-input" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/..." oninput="saveSetting('sheetUrl',this.value)">
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="btn btn-gold" onclick="testConnection()">Test Connection</button>
+          <a id="sheet-link" href="#" target="_blank" class="btn btn-outline" style="text-decoration:none">Open Google Sheet ↗</a>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>🔐 Security</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Admin Password</h4>
+            <p>Change your admin panel password</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input class="setting-input" type="password" id="new-pass" placeholder="New password" style="width:180px">
+            <button class="btn btn-gold" onclick="changePassword()">Update</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>📋 How to Setup Google Apps Script</h3>
+        <ol style="font-size:13px;color:var(--muted);line-height:2;padding-left:18px">
+          <li>Go to <strong style="color:var(--gold)">script.google.com</strong> → New Project</li>
+          <li>Delete existing code and paste the script provided</li>
+          <li>Click <strong style="color:var(--gold)">Deploy → New deployment → Web App</strong></li>
+          <li>Set <strong style="color:var(--gold)">"Who has access" → Anyone</strong></li>
+          <li>Click Deploy → Copy the Web App URL</li>
+          <li>Paste URL above and click <strong style="color:var(--gold)">Test Connection</strong></li>
+          <li>Also update your website HTML with the same URL</li>
+        </ol>
+        <button class="btn btn-outline" onclick="copyScript()" style="margin-top:14px">📋 Copy Apps Script Code</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- LEAD DETAIL MODAL -->
+<div class="modal-overlay" id="lead-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('lead-modal')">×</button>
+    <h3>Lead Details</h3>
+    <div id="lead-detail-content"></div>
+    <select class="status-select" id="lead-status-select" onchange="updateLeadStatus(this.value)">
+      <option value="New">🔵 New</option>
+      <option value="Contacted">🟠 Contacted</option>
+      <option value="Converted">🟢 Converted</option>
+      <option value="Lost">🔴 Lost</option>
+    </select>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <a id="lead-wa-link" href="#" target="_blank" class="btn btn-gold" style="text-decoration:none;flex:1;text-align:center">💬 WhatsApp</a>
+      <button class="btn btn-outline" onclick="closeModal('lead-modal')" style="flex:1">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PROJECT MODAL -->
+<div class="modal-overlay" id="project-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('project-modal')">×</button>
+    <h3>Add Project</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <input class="setting-input" id="p-client" placeholder="Client Name" style="width:100%">
+      <input class="setting-input" id="p-phone" placeholder="Phone Number" style="width:100%">
+      <select class="setting-input" id="p-plan" style="width:100%">
+        <option>Single Page – ₹2,000</option>
+        <option>Business 5 Pages – ₹5,000</option>
+        <option>Professional 10 Pages – ₹10,000</option>
+        <option>Website Redesign – ₹5,000</option>
+      </select>
+      <input class="setting-input" id="p-demo" placeholder="Demo URL (e.g. xyz.netlify.app)" style="width:100%">
+      <select class="setting-input" id="p-payment" style="width:100%">
+        <option>Pending</option>
+        <option>Paid – INR</option>
+        <option>Paid – USD</option>
+      </select>
+      <button class="btn btn-gold" onclick="addProject()">Add Project</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+var ADMIN_PASS_KEY = 'opulence_admin_pass';
+var DEFAULT_PASS = 'Opulence@2026';
+var LEADS_KEY = 'opulence_leads';
+var PROJECTS_KEY = 'opulence_projects';
+var SETTINGS_KEY = 'opulence_settings';
+
+// ── AUTH ──
+function doLogin() {
+  var pass = document.getElementById('login-pass').value;
+  var stored = localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASS;
+  if (pass === stored) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadAll();
+    checkConfigNotice();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    setTimeout(function(){ document.getElementById('login-err').style.display='none'; }, 3000);
+  }
+}
+document.getElementById('login-pass').addEventListener('keydown', function(e){
+  if(e.key==='Enter') doLogin();
+});
+function doLogout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+}
+function changePassword() {
+  var np = document.getElementById('new-pass').value.trim();
+  if(np.length < 6){ showToast('Password must be at least 6 characters', 'bad'); return; }
+  localStorage.setItem(ADMIN_PASS_KEY, np);
+  document.getElementById('new-pass').value = '';
+  showToast('✅ Password updated successfully', 'ok');
+}
+
+// ── SETTINGS ──
+function getSettings() { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); }
+function saveSetting(key, val) {
+  var s = getSettings(); s[key] = val;
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  checkConfigNotice();
+}
+function loadSettings() {
+  // Pre-fill GAS URL if not set
+  var s = getSettings();
+  if(!s.gsUrl) { s.gsUrl = 'https://script.google.com/macros/s/AKfycbzAdMf3irvKzB1gl3DgnmZj8u4wnGJgrG7S-xVgLHcruqzMj0M8APXZe5nolYg8pf2c6w/exec'; localStorage.setItem('opulence_settings', JSON.stringify(s)); }
+  var gsEl = document.getElementById('gs-url');
+  var shEl = document.getElementById('sheet-url');
+  if(gsEl && s.gsUrl) gsEl.value = s.gsUrl;
+  if(shEl && s.sheetUrl) {
+    shEl.value = s.sheetUrl;
+    document.getElementById('sheet-link').href = s.sheetUrl;
+  }
+}
+function checkConfigNotice() {
+  var s = getSettings();
+  var notice = document.getElementById('config-notice');
+  if(notice) notice.style.display = s.gsUrl ? 'none' : 'block';
+}
+function testConnection() {
+  var s = getSettings();
+  if(!s.gsUrl){ showToast('⚠️ Please enter Google Apps Script URL first', 'bad'); return; }
+  showToast('Testing connection...', 'ok');
+  fetch(s.gsUrl)
+    .then(function(r){ return r.json(); })
+    .then(function(d){ showToast('✅ Connection successful! ' + JSON.stringify(d), 'ok'); })
+    .catch(function(e){ showToast('❌ Connection failed: ' + e.message, 'bad'); });
+}
+
+// ── DATA ──
+function getLeads() {
+  // Must be opened from opulenceitsolutions.com for leads to show
+  // e.g. https://opulenceitsolutions.com/admin.html
+  return JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
+}
+function saveLeads(leads) { localStorage.setItem(LEADS_KEY, JSON.stringify(leads)); }
+function getProjects() { return JSON.parse(localStorage.getItem(PROJECTS_KEY) || '[]'); }
+function saveProjects(p) { localStorage.setItem(PROJECTS_KEY, JSON.stringify(p)); }
+
+// ── LOAD FROM GOOGLE SHEETS ──
+function loadLeads() {
+  var s = getSettings();
+  if(!s.gsUrl) { renderAll(); return; }
+  showToast('Loading leads from Google Sheets...', 'ok');
+  // Fetch via Apps Script
+  fetch(s.gsUrl + '?action=getLeads')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(d.leads) { saveLeads(d.leads); renderAll(); showToast('✅ Leads loaded: ' + d.leads.length, 'ok'); }
+      else { renderAll(); }
+    })
+    .catch(function(){ renderAll(); showToast('Using local data (offline)', 'ok'); });
+}
+
+// Add lead (called from website form submission)
+function addLead(lead) {
+  var leads = getLeads();
+  lead.id = Date.now();
+  lead.localDate = new Date().toLocaleDateString('en-IN');
+  lead.localTime = new Date().toLocaleTimeString('en-IN');
+  lead.status = 'New';
+  leads.unshift(lead);
+  saveLeads(leads);
+  renderAll();
+}
+
+// ── PAGES ──
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  document.getElementById('page-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(name === 'leads' || name === 'demo-leads') renderLeadsPage(name);
+  if(name === 'reports') renderReports();
+  if(name === 'settings') loadSettings();
+  if(name === 'projects') renderProjects();
+}
+
+// ── RENDER ALL ──
+function renderAll() {
+  renderDashboard();
+  renderLeadsPage('leads');
+  renderLeadsPage('demo-leads');
+  renderProjects();
+  renderReports();
+}
+function loadAll() { loadLeads(); }
+
+// ── DASHBOARD ──
+var currentLead = null;
+function renderDashboard() {
+  var leads = getLeads();
+  var today = new Date().toLocaleDateString('en-IN');
+  var todayCount = leads.filter(function(l){ return l.localDate === today; }).length;
+  var newCount = leads.filter(function(l){ return l.status === 'New'; }).length;
+  var converted = leads.filter(function(l){ return l.status === 'Converted'; }).length;
+  var rate = leads.length ? Math.round(converted / leads.length * 100) : 0;
+
+  document.getElementById('stat-total').textContent = leads.length;
+  document.getElementById('stat-today').textContent = todayCount + ' today';
+  document.getElementById('stat-new').textContent = newCount;
+  document.getElementById('stat-converted').textContent = converted;
+  document.getElementById('stat-rate').textContent = rate + '%';
+
+  // Revenue from projects
+  var projects = getProjects();
+  var planAmounts = {'Single Page':2000,'Business 5 Pages':5000,'Professional 10 Pages':10000,'Website Redesign':5000};
+  var revenue = projects.reduce(function(sum, p){
+    if(p.payment && p.payment.indexOf('Paid') > -1) {
+      var amt = Object.keys(planAmounts).find(function(k){ return p.plan && p.plan.indexOf(k) > -1; });
+      return sum + (amt ? planAmounts[amt] : 0);
+    }
+    return sum;
+  }, 0);
+  document.getElementById('stat-revenue').textContent = '₹' + revenue.toLocaleString('en-IN') + ' revenue';
+
+  renderPlanChart(leads);
+  renderStatusChart(leads);
+
+  // Recent leads table
+  var tbody = document.getElementById('recent-leads-tbody');
+  var recent = leads.slice(0, 10);
+  if(!recent.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">📭</div><p>No leads yet.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = recent.map(function(l){
+    return '<tr>' +
+      '<td class="muted">' + (l.date || l.localDate || '') + '</td>' +
+      '<td><strong>' + (l.name || '') + '</strong></td>' +
+      '<td>' + (l.phone || '') + '</td>' +
+      '<td><span style="font-size:11px;color:var(--muted)">' + (l.plan ? l.plan.split('–')[0].trim() : '') + '</span></td>' +
+      '<td>' + statusBadge(l.status) + '</td>' +
+      '<td><button class="btn btn-outline" onclick="viewLead(' + l.id + ')" style="padding:4px 10px;font-size:11px">View</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function renderPlanChart(leads) {
+  var plans = {'Single Page':0,'Business':0,'Professional':0,'Redesign':0};
+  leads.forEach(function(l){
+    if(!l.plan) return;
+    if(l.plan.indexOf('Single')>-1) plans['Single Page']++;
+    else if(l.plan.indexOf('Business')>-1||l.plan.indexOf('5 Page')>-1) plans['Business']++;
+    else if(l.plan.indexOf('Professional')>-1||l.plan.indexOf('10 Page')>-1) plans['Professional']++;
+    else if(l.plan.indexOf('Redesign')>-1) plans['Redesign']++;
+  });
+  var max = Math.max.apply(null, Object.values(plans)) || 1;
+  document.getElementById('plan-chart').innerHTML = Object.entries(plans).map(function(e){
+    return '<div class="bar-row"><div class="bar-label">' + e[0] + '</div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + (e[1]/max*100) + '%">' + e[1] + '</div></div></div>';
+  }).join('');
+}
+
+function renderStatusChart(leads) {
+  var statuses = {'New':0,'Contacted':0,'Converted':0,'Lost':0};
+  leads.forEach(function(l){ if(statuses[l.status]!==undefined) statuses[l.status]++; });
+  var max = Math.max.apply(null, Object.values(statuses)) || 1;
+  var colors = {'New':'#3b82f6','Contacted':'#f97316','Converted':'#22c55e','Lost':'#ef4444'};
+  document.getElementById('status-chart').innerHTML = Object.entries(statuses).map(function(e){
+    return '<div class="bar-row"><div class="bar-label">' + e[0] + '</div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + (e[1]/max*100) + '%;background:' + colors[e[0]] + '">' + e[1] + '</div></div></div>';
+  }).join('');
+}
+
+// ── LEADS TABLE ──
+var currentPage = 1, perPage = 15, filteredLeads = [];
+function renderLeadsPage(type) {
+  var leads = getLeads();
+  if(type === 'demo-leads') leads = leads.filter(function(l){ return l.formType === 'demo' || l.formType === 'Demo Request'; });
+  filteredLeads = leads;
+  var tbodyId = type === 'demo-leads' ? 'demo-leads-tbody' : 'all-leads-tbody';
+  renderTable(filteredLeads, tbodyId, type === 'demo-leads');
+}
+
+function renderTable(leads, tbodyId, compact) {
+  var tbody = document.getElementById(tbodyId);
+  if(!tbody) return;
+  if(!leads.length) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="empty-icon">📭</div><p>No leads found.</p></div></td></tr>';
+    return;
+  }
+  var start = (currentPage-1)*perPage;
+  var page = leads.slice(start, start+perPage);
+  var pgInfo = document.getElementById('pg-info');
+  if(pgInfo) pgInfo.textContent = 'Showing ' + Math.min(start+1,leads.length) + '–' + Math.min(start+perPage,leads.length) + ' of ' + leads.length + ' leads';
+
+  tbody.innerHTML = page.map(function(l){
+    if(compact) {
+      return '<tr>' +
+        '<td class="muted">' + (l.date||l.localDate||'') + '</td>' +
+        '<td><strong>' + (l.name||'') + '</strong></td>' +
+        '<td>' + (l.phone||'') + '</td>' +
+        '<td class="muted">' + (l.business||'') + '</td>' +
+        '<td><span style="font-size:11px;color:var(--muted)">' + (l.plan?l.plan.split('–')[0].trim():'') + '</span></td>' +
+        '<td>' + statusBadge(l.status) + '</td>' +
+        '<td><button class="btn btn-outline" onclick="viewLead(' + l.id + ')" style="padding:4px 10px;font-size:11px">View</button></td>' +
+        '</tr>';
+    }
+    return '<tr>' +
+      '<td class="muted">' + (l.date||l.localDate||'') + '</td>' +
+      '<td class="muted" style="font-size:11px">' + (l.refId||'') + '</td>' +
+      '<td><strong>' + (l.name||'') + '</strong></td>' +
+      '<td>' + (l.phone||'') + '</td>' +
+      '<td class="muted">' + (l.email||'') + '</td>' +
+      '<td><span style="font-size:11px;color:var(--muted)">' + (l.plan?l.plan.split('–')[0].trim():'') + '</span></td>' +
+      '<td>' + statusBadge(l.status) + '</td>' +
+      '<td><button class="btn btn-outline" onclick="viewLead(' + l.id + ')" style="padding:4px 10px;font-size:11px">View</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function changePage(dir) {
+  currentPage = Math.max(1, currentPage + dir);
+  renderTable(filteredLeads, 'all-leads-tbody', false);
+}
+
+function filterLeads(q) {
+  var leads = getLeads();
+  q = q.toLowerCase();
+  filteredLeads = q ? leads.filter(function(l){
+    return (l.name||'').toLowerCase().includes(q) ||
+           (l.phone||'').includes(q) ||
+           (l.email||'').toLowerCase().includes(q) ||
+           (l.business||'').toLowerCase().includes(q);
+  }) : leads;
+  currentPage = 1;
+  renderTable(filteredLeads, 'all-leads-tbody', false);
+}
+function filterByStatus(s) {
+  var leads = getLeads();
+  filteredLeads = s ? leads.filter(function(l){ return l.status === s; }) : leads;
+  currentPage = 1;
+  renderTable(filteredLeads, 'all-leads-tbody', false);
+}
+function filterByPlan(p) {
+  var leads = getLeads();
+  filteredLeads = p ? leads.filter(function(l){ return l.plan && l.plan.indexOf(p)>-1; }) : leads;
+  currentPage = 1;
+  renderTable(filteredLeads, 'all-leads-tbody', false);
+}
+
+// ── LEAD DETAIL ──
+function viewLead(id) {
+  var leads = getLeads();
+  var lead = leads.find(function(l){ return l.id === id; });
+  if(!lead) return;
+  currentLead = lead;
+  var html = [
+    ['Ref ID', lead.refId || 'N/A'],
+    ['Date', (lead.date||lead.localDate||'') + ' ' + (lead.time||lead.localTime||'')],
+    ['Form Type', lead.formType || 'N/A'],
+    ['Name', '<strong>' + (lead.name||'') + '</strong>'],
+    ['Phone', lead.phone || 'N/A'],
+    ['Email', lead.email || 'N/A'],
+    ['Business', lead.business || 'N/A'],
+    ['Plan', lead.plan || 'N/A'],
+    ['CA Question', lead.caQuestion || 'N/A'],
+    ['Message', lead.message || 'N/A'],
+  ].map(function(r){
+    return '<div class="detail-row"><div class="detail-label">' + r[0] + '</div><div class="detail-value">' + r[1] + '</div></div>';
+  }).join('');
+  document.getElementById('lead-detail-content').innerHTML = html;
+  document.getElementById('lead-status-select').value = lead.status || 'New';
+  var waMsg = '🔔 Following up on your website demo request!\n\nRef: ' + (lead.refId||'') + '\nName: ' + (lead.name||'') + '\nPlan: ' + (lead.plan||'');
+  document.getElementById('lead-wa-link').href = 'https://wa.me/91' + (lead.phone||'').replace(/\D/g,'') + '?text=' + encodeURIComponent(waMsg);
+  document.getElementById('lead-modal').classList.add('open');
+}
+
+function updateLeadStatus(status) {
+  if(!currentLead) return;
+  var leads = getLeads();
+  var idx = leads.findIndex(function(l){ return l.id === currentLead.id; });
+  if(idx > -1) { leads[idx].status = status; saveLeads(leads); renderAll(); showToast('✅ Status updated to ' + status, 'ok'); }
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── PROJECTS ──
+function renderProjects() {
+  var projects = getProjects();
+  var tbody = document.getElementById('projects-tbody');
+  if(!tbody) return;
+  if(!projects.length) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty"><div class="empty-icon">🏗️</div><p>No projects yet.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = projects.map(function(p, i){
+    var payColor = p.payment && p.payment.indexOf('Paid')>-1 ? 'var(--green)' : 'var(--orange)';
+    return '<tr>' +
+      '<td><strong>' + (p.client||'') + '</strong></td>' +
+      '<td>' + (p.phone||'') + '</td>' +
+      '<td class="muted">' + (p.plan?p.plan.split('–')[0].trim():'') + '</td>' +
+      '<td class="muted">' + (p.startDate||new Date().toLocaleDateString('en-IN')) + '</td>' +
+      '<td>' + (p.demo ? '<a href="'+p.demo+'" target="_blank" style="color:var(--gold);font-size:12px">'+p.demo+'</a>' : '—') + '</td>' +
+      '<td><span style="color:' + payColor + ';font-size:12px;font-weight:600">' + (p.payment||'Pending') + '</span></td>' +
+      '<td>' + statusBadge(p.status||'Active') + '</td>' +
+      '<td><button class="btn btn-red" onclick="deleteProject(' + i + ')" style="padding:4px 10px;font-size:11px">Delete</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function showAddProject() { document.getElementById('project-modal').classList.add('open'); }
+function addProject() {
+  var projects = getProjects();
+  projects.unshift({
+    client: document.getElementById('p-client').value,
+    phone:  document.getElementById('p-phone').value,
+    plan:   document.getElementById('p-plan').value,
+    demo:   document.getElementById('p-demo').value,
+    payment:document.getElementById('p-payment').value,
+    startDate: new Date().toLocaleDateString('en-IN'),
+    status: 'Active'
+  });
+  saveProjects(projects);
+  closeModal('project-modal');
+  renderProjects();
+  renderReports();
+  showToast('✅ Project added', 'ok');
+}
+function deleteProject(i) {
+  if(!confirm('Delete this project?')) return;
+  var p = getProjects(); p.splice(i,1); saveProjects(p); renderProjects(); renderReports();
+}
+
+// ── REPORTS ──
+function renderReports() {
+  var projects = getProjects();
+  var planAmounts = {'Single Page':2000,'Business 5 Pages':5000,'Professional 10 Pages':10000,'Website Redesign':5000};
+  var thisMonth = new Date().toLocaleDateString('en-IN',{month:'numeric',year:'numeric'});
+  var totalRev = 0, monthRev = 0;
+  var byPlan = {};
+  projects.forEach(function(p){
+    if(p.payment && p.payment.indexOf('Paid')>-1) {
+      var key = Object.keys(planAmounts).find(function(k){ return p.plan && p.plan.indexOf(k)>-1; });
+      var amt = key ? planAmounts[key] : 0;
+      totalRev += amt;
+      byPlan[key||'Other'] = (byPlan[key||'Other']||0) + amt;
+      if(p.startDate && p.startDate.split('/').slice(1).join('/')===thisMonth.split('/').slice(1).join('/')) monthRev += amt;
+    }
+  });
+  var avg = projects.length ? Math.round(totalRev/projects.length) : 0;
+  document.getElementById('rpt-total-rev').textContent = '₹' + totalRev.toLocaleString('en-IN');
+  document.getElementById('rpt-this-month').textContent = '₹' + monthRev.toLocaleString('en-IN');
+  document.getElementById('rpt-projects').textContent = projects.length;
+  document.getElementById('rpt-avg').textContent = '₹' + avg.toLocaleString('en-IN');
+  var max = Math.max.apply(null, Object.values(byPlan)) || 1;
+  var revChart = document.getElementById('revenue-chart');
+  if(revChart) {
+    revChart.innerHTML = Object.entries(byPlan).length ? Object.entries(byPlan).map(function(e){
+      return '<div class="bar-row"><div class="bar-label" style="font-size:11px">' + e[0] + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + (e[1]/max*100) + '%">₹' + e[1].toLocaleString('en-IN') + '</div></div></div>';
+    }).join('') : '<p style="color:var(--muted);font-size:13px">No paid projects yet.</p>';
+  }
+}
+
+// ── EXPORT CSV ──
+function exportCSV() {
+  var leads = getLeads();
+  if(!leads.length){ showToast('No leads to export', 'bad'); return; }
+  var headers = ['Date','Time','Ref ID','Form Type','Name','Phone','Email','Business','Plan','CA Question','Status'];
+  var rows = leads.map(function(l){
+    return [l.date||l.localDate||'', l.time||l.localTime||'', l.refId||'', l.formType||'', l.name||'',
+            l.phone||'', l.email||'', l.business||'', l.plan||'', l.caQuestion||'', l.status||''].map(function(v){
+      return '"' + String(v).replace(/"/g,'""') + '"';
+    }).join(',');
+  });
+  var csv = [headers.join(','), ...rows].join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'opulence-leads-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('✅ CSV exported successfully', 'ok');
+}
+
+// ── HELPERS ──
+function statusBadge(s) {
+  var cls = {New:'badge-new',Contacted:'badge-contacted',Converted:'badge-converted',Lost:'badge-lost'};
+  var icons = {New:'🔵',Contacted:'🟠',Converted:'🟢',Lost:'🔴'};
+  return '<span class="badge ' + (cls[s]||'badge-new') + '">' + (icons[s]||'🔵') + ' ' + (s||'New') + '</span>';
+}
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + (type||'');
+  setTimeout(function(){ t.className='toast'; }, 3500);
+}
+function copyScript() {
+  var script = `// Paste this in script.google.com → New Project\n// Then Deploy as Web App → Anyone can access\n\nvar SHEET_NAME = 'Leads';\nvar NOTIFY_EMAIL = 'ashishgupta151084@gmail.com';\n\nfunction doPost(e) {\n  try {\n    var data = JSON.parse(e.postData.contents);\n    var ss = SpreadsheetApp.getActiveSpreadsheet();\n    var sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);\n    if(sheet.getLastRow() === 0) sheet.appendRow(['Date','Time','Ref ID','Form','Name','Phone','Email','Business','Plan','CA Question','Status']);\n    var now = new Date();\n    sheet.appendRow([Utilities.formatDate(now,'Asia/Kolkata','dd/MM/yyyy'),Utilities.formatDate(now,'Asia/Kolkata','HH:mm:ss'),data.refId||'',data.formType||'',data.name||'',data.phone||'',data.email||'',data.business||'',data.plan||'',data.caQuestion||'','New']);\n    MailApp.sendEmail('${NOTIFY_EMAIL}', '🔔 New Lead - ' + (data.plan||''), 'Name: ' + data.name + '\\nPhone: ' + data.phone + '\\nPlan: ' + data.plan + '\\nRef: ' + data.refId);\n    return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);\n  } catch(err) {\n    return ContentService.createTextOutput(JSON.stringify({error:err.toString()})).setMimeType(ContentService.MimeType.JSON);\n  }\n}\n\nfunction doGet() {\n  return ContentService.createTextOutput(JSON.stringify({status:'running'})).setMimeType(ContentService.MimeType.JSON);\n}`;
+  navigator.clipboard.writeText(script).then(function(){ showToast('✅ Script copied to clipboard!', 'ok'); });
+}
+
+// Close modals on backdrop
+document.querySelectorAll('.modal-overlay').forEach(function(m){
+  m.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
