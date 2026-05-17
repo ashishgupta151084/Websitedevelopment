@@ -1440,19 +1440,86 @@ function sendToGAS(payload) {
   // Send email via EmailJS
   try {
     emailjs.send('service_5hz9zo4', 'template_xqn94eh', {
-      ref_id:      payload.refId      || '',
-      form_type:   payload.formType   || '',
-      name:        payload.name       || '',
-      phone:        payload.phone      || '',
-      email:       payload.email      || '',
-      business:    payload.business   || '',
-      plan:        payload.plan       || '',
-      ca_question: payload.caQuestion || '',
-      message:     payload.message    || '',
-      time:        new Date().toLocaleString('en-IN', {timeZone:'Asia/Kolkata'})
+      ref_id:       payload.refId         || '',
+      form_type:    payload.formType      || '',
+      name:         payload.name          || '',
+      phone:        payload.phone         || '',
+      email:        payload.email         || '',
+      business:     payload.business      || '',
+      plan:         payload.plan          || '',
+      ca_question:  payload.caQuestion    || '',
+      industry:     payload.industry      || '',
+      website_type: payload.website_type  || '',
+      timeline:     payload.timeline      || '',
+      biz_model:    payload.biz_model     || '',
+      biz_about:    payload.biz_about     || '',
+      services:     payload.services      || '',
+      target:       payload.target        || '',
+      existing_site:payload.existing_site || '',
+      colors:       payload.colors        || '',
+      source:       payload.source        || '',
+      whatsapp:     payload.whatsapp      || '',
+      address:      payload.address       || '',
+      biz_desc:     payload.biz_desc      || '',
+      audience:     payload.audience      || '',
+      usp:          payload.usp           || '',
+      pages:        payload.pages         || '',
+      references:   payload.references    || '',
+      logo:         payload.logo          || '',
+      content:      payload.content       || '',
+      domain:       payload.domain        || '',
+      domain_detail:payload.domain_detail || '',
+      deadline:     payload.deadline      || '',
+      budget:       payload.budget        || '',
+      message:      payload.message       || '',
+      time:         new Date().toLocaleString('en-IN', {timeZone:'Asia/Kolkata'})
     }).then(function(){ console.log('Email sent!'); },
             function(err){ console.warn('EmailJS error:', err); });
   } catch(e) { console.warn('EmailJS failed:', e); }
+
+  // Save to localStorage for admin panel
+  try {
+    var leads = JSON.parse(localStorage.getItem('opulence_leads') || '[]');
+    var lead = {
+      id:           payload.refId         || '',
+      date:         new Date().toLocaleString('en-IN', {timeZone:'Asia/Kolkata'}),
+      form_type:    payload.formType      || '',
+      name:         payload.name          || '',
+      phone:        payload.phone         || '',
+      email:        payload.email         || '',
+      business:     payload.business      || '',
+      plan:         payload.plan          || '',
+      ca_question:  payload.caQuestion    || '',
+      industry:     payload.industry      || '',
+      website_type: payload.website_type  || '',
+      timeline:     payload.timeline      || '',
+      biz_model:    payload.biz_model     || '',
+      biz_about:    payload.biz_about     || '',
+      services:     payload.services      || '',
+      target:       payload.target        || '',
+      existing_site:payload.existing_site || '',
+      colors:       payload.colors        || '',
+      source:       payload.source        || '',
+      whatsapp:     payload.whatsapp      || '',
+      address:      payload.address       || '',
+      biz_desc:     payload.biz_desc      || '',
+      audience:     payload.audience      || '',
+      usp:          payload.usp           || '',
+      pages:        payload.pages         || '',
+      references:   payload.references    || '',
+      logo:         payload.logo          || '',
+      content:      payload.content       || '',
+      domain:       payload.domain        || '',
+      domain_detail:payload.domain_detail || '',
+      deadline:     payload.deadline      || '',
+      budget:       payload.budget        || '',
+      message:      payload.message       || '',
+      status:       'New'
+    };
+    leads.unshift(lead);
+    localStorage.setItem('opulence_leads', JSON.stringify(leads));
+  } catch(e3) { console.warn('localStorage save failed:', e3); }
+
   // Also try GAS as backup
   try {
     var params = 'action=lead';
